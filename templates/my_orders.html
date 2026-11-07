@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Orders | PRE-DINE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="/" class="logo">PRE<span>DINE.</span></a>
+    <div class="nav-actions">
+        <a href="/">Home</a>
+        <a href="/logout">Logout</a>
+    </div>
+</header>
+
+<main class="dashboard">
+    <h1>My Orders</h1>
+    <p>Welcome, {{ session.username }}!</p>
+
+    <div class="table-wrapper">
+    <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Food</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Order Date</th>
+            <th>Status</th>
+        </tr>
+
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.food_name }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>₹{{ "%.2f"|format(order.total) }}</td>
+            <td>{{ order.created_at }}</td>
+            <td>{{ order.status }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6">You haven't placed any orders yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+
+    <a href="/#menu" class="button">Explore More Food</a>
+</main>
+
+</body>
+</html>

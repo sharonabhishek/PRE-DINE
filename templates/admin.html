@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Dashboard | PRE-DINE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="/" class="logo">PRE<span>DINE.</span></a>
+    <div class="nav-actions">
+        <span>Admin: {{ session.username }}</span>
+        <a href="/logout">Logout</a>
+    </div>
+</header>
+
+<main class="dashboard">
+
+    <h1>Admin Dashboard</h1>
+    <p>Manage your restaurant menu and customer orders.</p>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p class="message">{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <div class="stats">
+        <div class="stat-card">
+            <h2>{{ foods|length }}</h2>
+            <p>Total Food Items</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_orders }}</h2>
+            <p>Total Orders</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ pending_orders }}</h2>
+            <p>Pending Orders</p>
+        </div>
+    </div>
+
+    <!-- ADD FOOD -->
+    <section class="dashboard-section">
+        <h2>Add New Food Item</h2>
+
+        <form action="/admin/add-food" method="POST" class="admin-form">
+
+            <input type="text" name="name"
+                   placeholder="Food Name" required>
+
+            <input type="text" name="description"
+                   placeholder="Food Description" required>
+
+            <input type="number" name="price"
+                   placeholder="Price in ₹" min="1"
+                   step="0.01" required>
+
+            <select name="category" required>
+                <option value="">Select Category</option>
+                <option>Indian</option>
+                <option>Fast Food</option>
+                <option>Breakfast</option>
+                <option>Chinese</option>
+                <option>Italian</option>
+                <option>Dessert</option>
+                <option>Drinks</option>
+                <option>Snacks</option>
+            </select>
+
+            <button class="button">Add Food</button>
+        </form>
+    </section>
+
+    <!-- MANAGE FOOD -->
+    <section class="dashboard-section">
+        <h2>Manage Food Menu</h2>
+
+        <div class="table-wrapper">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Food Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+
+            {% for food in foods %}
+            <tr>
+                <td>{{ food.id }}</td>
+                <td>{{ food.name }}</td>
+                <td>{{ food.category }}</td>
+                <td>₹{{ "%.2f"|format(food.price) }}</td>
+                <td>
+                    <form action="/admin/delete-food/{{ food.id }}"
+                          method="POST"
+                          onsubmit="return confirm('Delete this food item?')">
+                        <button class="delete-btn">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </section>
+
+    <!-- CUSTOMER ORDERS -->
+    <section class="dashboard-section">
+        <h2>Customer Orders</h2>
+
+        <div class="table-wrapper">
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Food</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.username }}</td>
+                <td>{{ order.food_name }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>₹{{ "%.2f"|format(order.total) }}</td>
+                <td>{{ order.created_at }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                    {% if order.status == 'Pending' %}
+                    <form action="/admin/update-order/{{ order.id }}"
+                          method="POST">
+                        <button name="status" value="Accepted"
+                                class="accept-btn">Accept</button>
+                        <button name="status" value="Rejected"
+                                class="delete-btn">Reject</button>
+                    </form>
+                    {% elif order.status == 'Accepted' %}
+                    <form action="/admin/update-order/{{ order.id }}"
+                          method="POST">
+                        <button name="status" value="Completed"
+                                class="accept-btn">Complete</button>
+                    </form>
+                    {% else %}
+                        No action
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8">No customer orders yet.</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </section>
+
+    <a href="/" class="button">View Customer Website</a>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PRE-DINE | Smart Restaurant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <a class="logo" href="/">PRE<span>DINE.</span></a>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#menu">Menu</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+        {% if session.get('role') == 'customer' %}
+            <a href="/my-orders">My Orders</a>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/register" class="button">Register</a>
+        {% endif %}
+    </div>
+</header>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<section class="hero" id="home">
+    <div class="hero-content">
+        <p class="tagline">WELCOME TO PRE-DINE</p>
+        <h1>Good Food.<br>Zero Waiting.</h1>
+        <p>
+            Your favourite food, ready before you arrive.
+            Explore our menu and pre-order your meals online.
+        </p>
+        <a href="#menu" class="button">Explore Menu</a>
+    </div>
+</section>
+
+<section id="about" class="about">
+    <p class="tagline">ABOUT US</p>
+    <h2>Welcome to PRE-DINE</h2>
+    <p>
+        PRE-DINE is a smart restaurant pre-ordering platform.
+        Customers can explore food items, view prices and
+        place orders before arriving at the restaurant.
+        Our goal is to save time and improve the dining experience.
+    </p>
+</section>
+
+<section id="menu" class="menu-section">
+    <div class="section-heading">
+        <p class="tagline">OUR FOOD MENU</p>
+        <h2>Explore Delicious Food</h2>
+        <p>Choose your favourite meal and order in advance.</p>
+    </div>
+
+    <div class="food-container">
+        {% for food in foods %}
+        <div class="food-card">
+
+            <div class="food-image">🍽️</div>
+
+            <span class="category">{{ food.category }}</span>
+
+            <h3>{{ food.name }}</h3>
+            <p>{{ food.description }}</p>
+
+            <h4>₹{{ "%.2f"|format(food.price) }}</h4>
+
+            {% if session.get('role') == 'customer' %}
+            <form action="/order/{{ food.id }}" method="POST">
+                <label>Quantity</label>
+                <input type="number" name="quantity"
+                       value="1" min="1" max="20" required>
+                <button type="submit" class="button">
+                    Pre-Order Now
+                </button>
+            </form>
+            {% else %}
+            <a href="/login" class="button">Login to Order</a>
+            {% endif %}
+
+        </div>
+        {% else %}
+            <p>No food items available currently.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="services">
+    <div class="section-heading">
+        <p class="tagline">WHY PRE-DINE?</p>
+        <h2>Our Services</h2>
+    </div>
+
+    <div class="service-container">
+        <div class="service-card">
+            <h3>🍴 Online Menu</h3>
+            <p>Explore food items and prices easily.</p>
+        </div>
+
+        <div class="service-card">
+            <h3>⏰ Pre-Ordering</h3>
+            <p>Order food before reaching the restaurant.</p>
+        </div>
+
+        <div class="service-card">
+            <h3>⚡ Save Time</h3>
+            <p>Reduce waiting and enjoy your dining experience.</p>
+        </div>
+    </div>
+</section>
+
+<section class="about" id="contact">
+    <p class="tagline">GET IN TOUCH</p>
+    <h2>Contact PRE-DINE</h2>
+    <p>Email: predine@gmail.com</p>
+    <p>Good Food. Zero Waiting.</p>
+</section>
+
+<footer>
+    <h2>PRE-DINE</h2>
+    <p>Smart Restaurant Pre-Ordering System</p>
+    <p>© 2026 PRE-DINE. All Rights Reserved.</p>
+    <a href="/admin/login">Admin Login</a>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Customer Login | PRE-DINE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-page">
+
+<div class="auth-card">
+    <h1>PRE<span>DINE.</span></h1>
+    <h2>Customer Login</h2>
+    <p>Login to pre-order your favourite food.</p>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p class="message">{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <label>Username</label>
+        <input type="text" name="username" placeholder="Enter username" required>
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Enter password" required>
+
+        <button class="button full-button">Login</button>
+    </form>
+
+    <p>New customer? <a href="/register">Create Account</a></p>
+    <p><a href="/">Back to Home</a></p>
+    <p><a href="/admin/login">Admin Login</a></p>
+</div>
+
+</body>
+</html>

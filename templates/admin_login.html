@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Login | PRE-DINE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-page">
+
+<div class="auth-card">
+    <h1>PRE<span>DINE.</span></h1>
+    <h2>Admin Login</h2>
+    <p>Restaurant management portal</p>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <p class="message">{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <label>Admin Username</label>
+        <input type="text" name="username" required>
+
+        <label>Admin Password</label>
+        <input type="password" name="password" required>
+
+        <button class="button full-button">Login as Admin</button>
+    </form>
+
+    <p><a href="/">Back to Home</a></p>
+</div>
+
+</body>
+</html>
